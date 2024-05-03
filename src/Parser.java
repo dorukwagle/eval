@@ -40,14 +40,29 @@ public class Parser {
                 ).toArray(String[][][][]::new);
     }
 
-    public String evaluate() {
+    private double division(String[] exp) {
+        double res = Double.parseDouble(exp[0]);
 
+        for (int i = 1; i < exp.length; ++i)
+            res /= Double.parseDouble(exp[i]);
+
+        return res;
+    }
+
+
+
+    // TODO: will remove it
+    private String expressionToString() {
         return Arrays.toString(
                 Arrays.stream(
-                        this.splitDivision(this.splitMultiplication(this.splitAddition(this.splitSubtraction())))
-                )
+                                this.splitDivision(this.splitMultiplication(this.splitAddition(this.splitSubtraction())))
+                        )
                         .map(arr3d -> Arrays.toString(Arrays.stream(arr3d).map(arr2d -> Arrays.toString(Arrays.stream(arr2d).map(Arrays::toString).toArray())).toArray())).toArray()
-//                        .map(arr3d -> Arrays.toString(Arrays.stream(arr3d).map(Arrays::toString)).toArray())}).toArray()
         );
+    }
+
+    public String evaluate() {
+
+        return this.expressionToString();
     }
 }
