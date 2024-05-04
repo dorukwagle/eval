@@ -8,8 +8,13 @@ public class Main {
             var input = reader.nextLine();
             if (input.equalsIgnoreCase("q")) break;
 
-            var result = new Parser(input).evaluate();
-            System.out.println(result);
+            String result = null;
+            try {
+                result = Parser.evaluate(input);
+                System.out.println(result);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 }
