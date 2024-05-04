@@ -41,15 +41,34 @@ public class Parser {
     }
 
     private double division(String[] exp) {
-        double res = Double.parseDouble(exp[0]);
-
-        for (int i = 1; i < exp.length; ++i)
-            res /= Double.parseDouble(exp[i]);
-
-        return res;
+        return Arrays.stream(Arrays.stream(exp)
+                .map(Double::parseDouble)
+                .toArray(Double[]::new)
+        ).reduce((a, b) -> a / b).get();
     }
 
+    private double multiply(String[] exp) {
+        return Arrays.stream(Arrays.stream(exp)
+                .map(Double::parseDouble)
+                .toArray(Double[]::new)
+        ).reduce((a, b) -> a * b).get();
+    }
 
+    private double add(String[] exp) {
+        return Arrays.stream(
+                Arrays.stream(exp)
+                        .map(Double::parseDouble)
+                        .toArray(Double[]::new)
+        ).reduce(Double::sum).get();
+    }
+
+    private double subtract(String[] exp) {
+        return Arrays.stream(
+                Arrays.stream(exp)
+                        .map(Double::parseDouble)
+                        .toArray(Double[]::new)
+        ).reduce((a, b) -> a - b).get();
+    }
 
     // TODO: will remove it
     private String expressionToString() {
