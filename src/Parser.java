@@ -40,34 +40,38 @@ public class Parser {
                 ).toArray(String[][][][]::new);
     }
 
-    private double division(String[] exp) {
-        return Arrays.stream(Arrays.stream(exp)
+    private String division(String[] exp) {
+        var value = Arrays.stream(Arrays.stream(exp)
                 .map(Double::parseDouble)
                 .toArray(Double[]::new)
-        ).reduce((a, b) -> a / b).get();
+        ).reduce((a, b) -> a / b);
+        return String.valueOf(value.isPresent() ? value.get() : 1);
     }
 
-    private double multiply(String[] exp) {
-        return Arrays.stream(Arrays.stream(exp)
+    private String multiply(String[] exp) {
+        var value = Arrays.stream(Arrays.stream(exp)
                 .map(Double::parseDouble)
                 .toArray(Double[]::new)
-        ).reduce((a, b) -> a * b).get();
+        ).reduce((a, b) -> a * b);
+        return String.valueOf(value.isPresent() ? value.get() : 0);
     }
 
-    private double add(String[] exp) {
-        return Arrays.stream(
+    private String add(String[] exp) {
+        var value = Arrays.stream(
                 Arrays.stream(exp)
                         .map(Double::parseDouble)
                         .toArray(Double[]::new)
-        ).reduce(Double::sum).get();
+        ).reduce(Double::sum);
+        return String.valueOf(value.isPresent() ? value.get() : 0);
     }
 
-    private double subtract(String[] exp) {
-        return Arrays.stream(
+    private String subtract(String[] exp) {
+        var value = Arrays.stream(
                 Arrays.stream(exp)
                         .map(Double::parseDouble)
                         .toArray(Double[]::new)
-        ).reduce((a, b) -> a - b).get();
+        ).reduce((a, b) -> a - b);
+        return String.valueOf(value.isPresent() ? value.get() : 0);
     }
 
     // TODO: will remove it
@@ -81,7 +85,48 @@ public class Parser {
     }
 
     public String evaluate() {
+//        [
+//                [
+//                        [[23]]
+//                ],
+//                [
+//                        [[78]],
+//                        [[65]]
+//                ],
+//                [
+//                        [[88]],
+//                        [
+//                                [6],
+//                                [45],
+//                                [3]
+//                        ],
+//                        [
+//                                [78, 34]
+//                        ],
+//                        [
+//                                [78, 23, 56]
+//                        ],
+//                        [[23]]
+//                ]
+//        ]
+        var expression = this.splitDivision(
+                this.splitMultiplication(
+                        this.splitAddition(this.splitSubtraction())));
 
-        return this.expressionToString();
+        var divPerformed = Arrays.stream(expression)
+                .map(arr3d -> Arrays.stream(arr3d)
+                        .map(arr2d -> Arrays.stream(arr2d)
+                                .map(this::division).toArray(String[]::new)
+                        ).toArray(String[][]::new)).toArray(String[][][]::new);
+
+        var mulPerformed = Arrays.stream(divPerformed)
+                .map(arr2d -> Arrays.stream(arr2d)
+                        .map(this::multiply).toArray(String[]::new)
+                ).toArray(String[][]::new);
+
+        var addPerformed = Arrays.stream(mulPerformed)
+                .map(this::add).toArray(String[]::new);
+
+        return subtract(addPerformed);
     }
 }
