@@ -59,14 +59,38 @@ public class Parser {
         }
     }
 
+    private static void replaceInArray(int start, int end, String value) {
+        var diff = end - start;
+        tokens[start++] = value;
+        for (int i = start; i <= tokenCounter - diff; ++i)
+            tokens[i] = tokens[i + diff];
+        tokenCounter -= diff;
+    }
+
+    private static void powerOperation() {
+        for (int i = 0; i <= tokenCounter; ++i) {
+            if (!tokens[i].equals("^")) continue;
+
+            var res = Math.pow(
+                    Double.parseDouble(tokens[i - 1]),
+                    Double.parseDouble(tokens[i + 1]));
+            replaceInArray(i - 1, i + 1, String.valueOf(res));
+        }
+    }
+
     // TODO: will remove it
     private static String expressionToString() {
-        return Arrays.toString(tokens);
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i <= tokenCounter; ++i)
+            str.append(tokens[i]);
+        return str.toString();
     }
 
     public static String evaluate(String exp) throws Exception{
         reset();
         tokenize(preprocess(exp));
+
+        powerOperation();
         return expressionToString();
     }
 }
