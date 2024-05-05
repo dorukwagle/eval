@@ -27,6 +27,7 @@ public class Parser {
 
     private static String preprocess(String exp) {
         return exp
+                .replaceAll(" +", "")
                 .replaceAll("/+", "/")
                 .replaceAll("\\*+", "\\*")
                 .replaceAll("--", "+")
