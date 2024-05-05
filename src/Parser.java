@@ -25,7 +25,7 @@ public class Parser {
         Arrays.fill(tokens, "");
     }
 
-    private static void validate(String exp) throws Exception{
+    private static void tokenize(String exp) throws Exception{
         var exps = exp.toCharArray();
         var flag = false;
         var pFlag = false;
@@ -54,7 +54,7 @@ public class Parser {
 
     public static String evaluate(String exp) throws Exception{
         reset();
-        validate(exp);
+        tokenize(exp);
         return expressionToString();
     }
 }
