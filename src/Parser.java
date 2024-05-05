@@ -32,6 +32,7 @@ public class Parser {
                 .replaceAll("--", "+")
                 .replaceAll("\\++", "\\+")
                 .replaceAll("\\+-", "-")
+                .replaceAll("\\^+", "\\^")
                 .replaceAll("%+", "%")
                 .replaceAll("%", "/100");
     }
