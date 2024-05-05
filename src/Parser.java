@@ -25,6 +25,17 @@ public class Parser {
         Arrays.fill(tokens, "");
     }
 
+    private static String preprocess(String exp) {
+        return exp
+                .replaceAll("/+", "/")
+                .replaceAll("\\*+", "\\*")
+                .replaceAll("--", "+")
+                .replaceAll("\\++", "\\+")
+                .replaceAll("\\+-", "-")
+                .replaceAll("%+", "%")
+                .replaceAll("%", "/100");
+    }
+
     private static void tokenize(String exp) throws Exception{
         var exps = exp.toCharArray();
         var flag = false;
@@ -54,7 +65,7 @@ public class Parser {
 
     public static String evaluate(String exp) throws Exception{
         reset();
-        tokenize(exp);
+        tokenize(preprocess(exp));
         return expressionToString();
     }
 }
