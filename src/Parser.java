@@ -1,12 +1,9 @@
 import java.util.Arrays;
-import java.util.function.IntFunction;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Parser {
-
+    private final static int EXP_LENGTH = 100;
     private static final Character[] legalChars = {'.', '+', '-', '*', '/', '^'};
-    private static String[] tokens = new String[100];
+    private static String[] tokens = new String[EXP_LENGTH];
     private static int tokenCounter = 0;
 
     private static boolean isLegalChar(char ch) {
@@ -40,6 +37,8 @@ public class Parser {
     }
 
     private static void tokenize(String exp) throws Exception{
+        if (exp.length() > EXP_LENGTH) throw new Exception("Expression too long");
+
         var exps = exp.toCharArray();
         var flag = false;
         var pFlag = false;
@@ -69,101 +68,51 @@ public class Parser {
         tokenCounter -= diff;
     }
 
-    private static int powerOperation(int start) {
+    private static int operate(int start, String operator) {
         int i = start;
         boolean found = false;
         for (; i <= tokenCounter; ++i)
-            if (tokens[i].equals("^")) {
+            if (tokens[i].equals(operator)) {
                 found = true;
                 break;
             }
 
         if (!found) return -1;
 
-        var res = Math.pow(
-                Double.parseDouble(tokens[i - 1]),
-                Double.parseDouble(tokens[i + 1]));
+        var a = Double.parseDouble(tokens[i - 1]);
+        var b = Double.parseDouble(tokens[i + 1]);
+
+        double res = switch (operator) {
+            case "^" -> Math.pow(a, b);
+            case "/" -> a / b;
+            case "*" -> a * b;
+            case "+" -> a + b;
+            default -> a - b;
+        };
+
         replaceInArray(i - 1, i + 1, String.valueOf(res));
 
         return i - 1;
+    }
+
+    private static int powerOperation(int start) {
+        return operate(start, "^");
     }
 
     private static int divisionOperation(int start) {
-        int i = start;
-        boolean found = false;
-        for (; i <= tokenCounter; ++i)
-            if (tokens[i].equals("/")) {
-                found = true;
-                break;
-            }
-
-        if (!found) return -1;
-
-        var res =
-                Double.parseDouble(tokens[i - 1]) /
-                Double.parseDouble(tokens[i + 1]);
-        replaceInArray(i - 1, i + 1, String.valueOf(res));
-
-        return i - 1;
+        return operate(start, "/");
     }
 
     private static int multiplicationOperation(int start) {
-        int i = start;
-        boolean found = false;
-
-        for (; i <= tokenCounter; ++i)
-            if (tokens[i].equals("*")) {
-                found = true;
-                break;
-            }
-
-        if (!found) return -1;
-
-        var res =
-                Double.parseDouble(tokens[i - 1]) *
-                        Double.parseDouble(tokens[i + 1]);
-        replaceInArray(i - 1, i + 1, String.valueOf(res));
-
-        return i - 1;
+        return operate(start, "*");
     }
 
     private static int additionOperation(int start) {
-        int i = start;
-        boolean found = false;
-        for (; i <= tokenCounter; ++i)
-            if (tokens[i].equals("+")) {
-                found = true;
-                break;
-            }
-
-        if (!found) return -1;
-
-        var res =
-                Double.parseDouble(tokens[i - 1]) +
-                        Double.parseDouble(tokens[i + 1]);
-        replaceInArray(i - 1, i + 1, String.valueOf(res));
-
-        return i - 1;
+        return operate(start, "+");
     }
 
     private static int subtractionOperation(int start) {
-        int i = start;
-        boolean found = false;
-
-        for (; i <= tokenCounter; ++i)
-            if (tokens[i].equals("-")) {
-                found = true;
-                break;
-            }
-
-        if (!found) return -1;
-
-        var res =
-                Double.parseDouble(tokens[i - 1]) -
-                        Double.parseDouble(tokens[i + 1]);
-        replaceInArray(i - 1, i + 1, String.valueOf(res));
-
-        return i - 1;
+        return operate(start, "-");
     }
 
     // TODO: will remove it
