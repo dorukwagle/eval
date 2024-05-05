@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 public class Parser {
 
-    private static final Character[] legalChars = {'.', '+', '-', '*', '/'};
+    private static final Character[] legalChars = {'.', '+', '-', '*', '/', '^'};
     private static final String[] tokens = new String[100];
     private static int tokenCounter = 0;
 
