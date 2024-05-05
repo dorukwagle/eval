@@ -78,6 +78,17 @@ public class Parser {
         }
     }
 
+    private static void divisionOperation() {
+        for (int i = 0; i <= tokenCounter; ++i) {
+            if (!tokens[i].equals("/")) continue;
+
+            var res =
+                    Double.parseDouble(tokens[i - 1]) /
+                    Double.parseDouble(tokens[i + 1]);
+            replaceInArray(i - 1, i + 1, String.valueOf(res));
+        }
+    }
+
     // TODO: will remove it
     private static String expressionToString() {
         StringBuilder str = new StringBuilder();
@@ -91,6 +102,8 @@ public class Parser {
         tokenize(preprocess(exp));
 
         powerOperation();
+        divisionOperation();
+
         return expressionToString();
     }
 }
