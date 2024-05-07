@@ -180,9 +180,11 @@ public class Parser {
         String curExp = "";
 
         while (exp.contains("(")) {
+            int start = exp.lastIndexOf('(');
+            int end = start + (exp.substring(start)).indexOf(')') + 1;
             curExp = exp.substring(
-                    exp.lastIndexOf('('),
-                    exp.indexOf(')') + 1
+                    start,
+                    end
             );
             exp = exp.replace(curExp, evaluator(curExp.substring(1, curExp.length() - 1)));
         }

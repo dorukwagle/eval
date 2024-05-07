@@ -14,8 +14,8 @@ public class Main {
                 result = Parser.evaluate(input);
                 System.out.println(result);
             } catch (Exception e) {
-//                System.out.println(e.getMessage());
-                e.printStackTrace();
+                System.out.println(e.getMessage());
+//                e.printStackTrace();
             }
         }
     }
