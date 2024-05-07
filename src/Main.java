@@ -4,11 +4,12 @@ public class Main {
     public static void main(String[] args) {
         var reader = new Scanner(System.in);
         while (true) {
+            System.out.println("Enter 'q' to exit.");
             System.out.println("Enter the expression:-");
             var input = reader.nextLine();
             if (input.equalsIgnoreCase("q")) break;
 
-            String result = null;
+            String result;
             try {
                 result = Parser.evaluate(input);
                 System.out.println(result);

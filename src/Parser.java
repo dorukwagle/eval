@@ -3,7 +3,7 @@ import java.util.Arrays;
 public class Parser {
     private final static int EXP_LENGTH = 100;
     private static final Character[] legalChars = {'.', '+', '-', '*', '/', '^'};
-    private static String[] tokens = new String[EXP_LENGTH];
+    private final static String[] tokens = new String[EXP_LENGTH];
     private static int tokenCounter = 0;
 
     private static boolean isLegalChar(char ch) {
@@ -26,12 +26,12 @@ public class Parser {
         return exp
                 .replaceAll(" +", "")
                 .replaceAll("/+", "/")
-                .replaceAll("\\*+", "\\*")
+                .replaceAll("\\*+", "*")
                 .replaceAll("--", "+")
-                .replaceAll("\\++", "\\+")
+                .replaceAll("\\++", "+")
                 .replaceAll("\\+-", "-")
                 .replaceAll("-\\+", "-")
-                .replaceAll("\\^+", "\\^")
+                .replaceAll("\\^+", "^")
                 .replaceAll("%+", "%")
                 .replaceAll("%", "/100");
     }
@@ -115,7 +115,6 @@ public class Parser {
         return operate(start, "-");
     }
 
-    // TODO: will remove it
     private static String expressionToString() {
         StringBuilder str = new StringBuilder();
         for (int i = 0; i <= tokenCounter; ++i)
@@ -125,7 +124,7 @@ public class Parser {
         return fin.startsWith("-") ? "0" + fin : fin;
     }
 
-    public static String evaluate(String exp) throws Exception{
+    private static String evaluator(String exp) throws Exception{
         reset();
         tokenize(preprocess(exp));
 
@@ -162,5 +161,26 @@ public class Parser {
             add = additionOperation(add);
 
         return tokens[0];
+    }
+
+    private static boolean checkBraces(String exp) throws Exception {
+        var count = 0;
+        if (!exp.contains("(")) return false;
+
+        for (char c : exp.toCharArray()) {
+            if (c == '(') count++;
+            else if (c == ')') count--;
+            if (count < 0) throw new Exception("Unexpected braces ')' at the beginning");
+        }
+        if (count > 0) throw new Exception("Expected ')' at the end");
+        return true;
+    }
+
+    private static String bracesEvaluator(String exp) {
+        return "";
+    }
+
+    public static String evaluate(String exp) throws Exception {
+        return checkBraces(exp) ? bracesEvaluator(exp) : evaluator(exp);
     }
 }
