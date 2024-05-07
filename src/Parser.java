@@ -176,11 +176,21 @@ public class Parser {
         return true;
     }
 
-    private static String bracesEvaluator(String exp) {
-        return "";
+    private static String bracesEvaluator(String exp) throws Exception {
+        String curExp = "";
+
+        while (exp.contains("(")) {
+            curExp = exp.substring(
+                    exp.lastIndexOf('('),
+                    exp.indexOf(')') + 1
+            );
+            exp = exp.replace(curExp, evaluator(curExp.substring(1, curExp.length() - 1)));
+        }
+        return exp;
     }
 
     public static String evaluate(String exp) throws Exception {
-        return checkBraces(exp) ? bracesEvaluator(exp) : evaluator(exp);
+        return !checkBraces(exp) ? evaluator(exp) :
+            evaluator(bracesEvaluator(exp));
     }
 }
